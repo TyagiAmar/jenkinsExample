@@ -4,6 +4,7 @@ stage ('Checkout'){
 }
 
 stage ('Build'){
+    sh chmod a+x ./gradlew
     sh './gradlew clean assembleRelease'
 }
 stage ('Report'){
