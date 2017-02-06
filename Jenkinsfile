@@ -14,8 +14,8 @@ stage ('Build'){
     }
     }
    catch (Exception e) {
-   sendEmails('''Hi,
-                  build failed, please see logs...''')
+      sendEmails('''Hi,
+                  build failed, please see logs...''' +e.getMessage())
       }
 }
 stage ('Report'){
