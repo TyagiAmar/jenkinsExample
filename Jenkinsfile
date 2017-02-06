@@ -7,13 +7,15 @@ stage ('Build'){
  try {
     sh 'chmod a+x ./gradlew'
     sh './gradlew clean assembleRelease'
-    if(build.previousBuild.result.toString().equals('FAILURE'))
+    currentBuild.result='SUCCESS'
+    if(currentBuild.previousBuild.result!=null && currentBuild.previousBuild.result.toString().equals('SUCCESS'))
     {
      sendEmails('''Hi,
-                      Build succeded after failure.''')
-    }
+                      build succeded,after failure.''')
+                      }
     }
    catch (Exception e) {
+   currentBuild.result='FAILURE'
       sendEmails('''Hi,
                   build failed, please see logs...''' +e.getMessage())
       }
@@ -25,5 +27,5 @@ stage ('Report'){
 
 }
 def sendEmails(msg) {
-  emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: 'amar.tyagi@kelltontech.com'
+  emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to: 'amar.tyagi@kelltontech.com'
 }
