@@ -3,7 +3,8 @@ stage ('Checkout'){
   checkout scm
 }
 
-stage ('Build'){
+stage ('Build')
+{
  try {
     sh 'chmod a+x ./gradlew'
     sh './gradlew clean assembleRelease'
