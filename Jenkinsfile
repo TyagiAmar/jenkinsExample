@@ -17,7 +17,7 @@ stage ('Build'){
    catch (Exception e) {
    currentBuild.result='FAILURE'
       sendEmails('''Hi,
-                  build failed, please see logs...''' +e.getMessage())
+                  build failed, please see logs...''' +e.getStackTrace().toString())
       }
 }
 stage ('Report'){
