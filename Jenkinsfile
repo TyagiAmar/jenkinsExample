@@ -25,5 +25,5 @@ stage ('Report'){
 
 }
 def sendEmails(msg) {
-  emailext body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: 'amar.tyagi@kelltontech.com'
+  emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: 'amar.tyagi@kelltontech.com'
 }
