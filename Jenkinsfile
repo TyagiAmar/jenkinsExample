@@ -22,7 +22,8 @@ stage ('Report'){
         sh './gradlew lint'
         androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
 }
+
+}
 def sendEmails(def msg) {
   emailext body: '$msg', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: 'amar.tyagi@kelltontech.com'
-}
 }
