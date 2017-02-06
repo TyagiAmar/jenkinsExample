@@ -10,6 +10,7 @@ stage ('Build')
     sh './gradlew clean assembleRelease'
     currentBuild.result='SUCCESS'
     echo "RESULT: ${currentBuild.result}"
+    echo "RESULT: ${currentBuild.previousBuild.result}"
     if(currentBuild.previousBuild.result!=null && currentBuild.previousBuild.result.toString().equals('SUCCESS'))
     {
      sendEmails('''Hi,
