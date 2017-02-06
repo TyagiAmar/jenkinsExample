@@ -9,7 +9,7 @@ stage ('Build')
     sh 'chmod a+x ./gradlew'
     sh './gradlew clean assembleRelease'
     currentBuild.result='SUCCESS'
-    echo 'RESULT: ${currentBuild.result}'
+    echo "RESULT: ${currentBuild.result}"
     if(currentBuild.previousBuild.result!=null && currentBuild.previousBuild.result.toString().equals('SUCCESS'))
     {
      sendEmails('''Hi,
