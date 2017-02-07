@@ -18,6 +18,7 @@ try {
         }
 
         stage ('Report'){
+        input 'ready for production'
                 sh './gradlew lint'
                 androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
         }
@@ -27,7 +28,7 @@ try {
         currentBuild.result='FAILURE'
         sendEmails('''Hi,build failed, please see logs...''' +e.getMessage())
     }
-        stage ('upload')
+       /* stage ('upload')
         {
             try
             {
@@ -38,7 +39,7 @@ try {
             sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage())
             }
 
-        }
+        }*/
 }
 
 def sendEmails(msg) {
