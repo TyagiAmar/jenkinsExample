@@ -18,7 +18,7 @@ try {
         }
 
         stage ('Report'){
-        input 'ready for production'
+input message: 'ready for production?', parameters: [password(defaultValue: '', description: '', name: 'password')], submitter: 'vijaysaini', submitterParameter: 'whoapprovered'
                 sh './gradlew lint'
                 androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
         }
