@@ -1,5 +1,6 @@
 node() {
 try {
+def emailTo='amar.tyagi@kelltontech.com'
         stage ('Checkout'){
           checkout scm
         }
@@ -10,7 +11,7 @@ try {
             sh './gradlew clean assembleRelease'
             if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
             {
-                 sendEmails('''Hi,build succeded,after failure.''')
+                 sendEmails('''Hi,build succeded,after failure.''',emailTo)
             }
 
         }
@@ -23,7 +24,7 @@ try {
     }
     catch (Exception e) {
         currentBuild.result='FAILURE'
-        sendEmails('''Hi,build failed, please see logs...''' +e.getMessage())
+        sendEmails('''Hi,build failed, please see logs...''' +e.getMessage(),emailTo)
     }
 
 }
@@ -36,11 +37,11 @@ try {
   //          }
   //          catch(Exception e)
   //          {
-  //          sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage())
+  //          sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage(),emailTo)
   //          }
   //      }*/
 
-def sendEmails(msg) {
-   def emailTo='amar.tyagi@kelltontech.com'
-   emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:emailTo
+def sendEmails(msg,toSend) {
+
+   emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:toSend
 }
