@@ -33,7 +33,7 @@ try {
             {
             androidApkUpload apkFilesPattern: '**/*.apk', googleCredentialsId: 'AmarExample', recentChangeList: [[language: 'es-US', text: 'New changes.']], trackName: 'alpha'
             }
-            catch()
+            catch(Exception e)
             {
             sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage())
             }
