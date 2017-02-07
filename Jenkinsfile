@@ -44,6 +44,8 @@ try {
 
 def sendEmails(msg) {
    echo 'value: ${emailTo}'
-   echo "${EMAIL_TO}"
+   echo "${emailTo}"
+   echo '$emailTo'
+   echo 'emailTo'
   // emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:"${EMAIL_TO}"
 }
