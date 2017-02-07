@@ -1,6 +1,9 @@
+#!/usr/bin/env groovy
+
+def emailTo='amar.tyagi@kelltontech.com'
 node() {
 try {
-def emailTo='amar.tyagi@kelltontech.com'
+
         stage ('Checkout'){
           checkout scm
         }
@@ -27,6 +30,12 @@ def emailTo='amar.tyagi@kelltontech.com'
         sendEmails('''Hi,build failed, please see logs...''' +e.getMessage(),emailTo)
     }
 
+
+}
+
+def sendEmails(msg,tom) {
+
+    emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:tom
 }
 
   // stage ('upload')
@@ -37,11 +46,7 @@ def emailTo='amar.tyagi@kelltontech.com'
   //          }
   //          catch(Exception e)
   //          {
-  //          sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage(),emailTo)
+  //          sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage())
   //          }
   //      }*/
 
-def sendEmails(msg,toSend) {
-
-   emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:toSend
-}
