@@ -49,7 +49,7 @@ try {
                     if(branchName=='master')
                     {
                         //todo
-                        timeout(time: 5, unit: 'SECONDS')
+                        timeout(time: 10, unit: 'SECONDS')
                                 {
                                     echo" coming in timeout"
                                     input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
@@ -67,6 +67,7 @@ try {
     }
     catch (Exception e)
     {
+        echo("exception"+e.toString())
         sendEmails(DEV_EmailRecipients,'Hi,Publish failed !','',true)
     }
 
