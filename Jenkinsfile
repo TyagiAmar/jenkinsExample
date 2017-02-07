@@ -42,5 +42,5 @@ try {
 }
 
 def sendEmails(msg) {
-  emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to: '$EMAIL_TO'
+  emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to: EMAIL_TO
 }
