@@ -42,5 +42,5 @@ try {
 
 def sendEmails(msg) {
    def emailTo='amar.tyagi@kelltontech.com'
-  // emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:emailTo
+   emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:emailTo
 }
