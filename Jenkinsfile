@@ -21,7 +21,7 @@ try {
             sh './gradlew clean assembleRelease'
             if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
             {
-                 sendEmails(devEmailRecipients,'Hi,build succeded,after failure.','',false)
+                 sendEmails(DEV_EmailRecipients,'Hi,build succeded,after failure.','',false)
             }
 
         }
@@ -38,7 +38,7 @@ try {
     catch (Exception e)
     {
         currentBuild.result='FAILURE'
-        sendEmails(devEmailRecipients,'Hi,build Failed!','',true)
+        sendEmails(DEV_EmailRecipients,'Hi,build Failed!','',true)
     }
 
 
