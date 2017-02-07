@@ -1,5 +1,3 @@
-def emailTo='amar.tyagi@kelltontech.com'
-
 node() {
 try {
         stage ('Checkout'){
@@ -43,9 +41,6 @@ try {
   //      }*/
 
 def sendEmails(msg) {
-   echo 'value: ${emailTo}'
-   echo "${emailTo}"
-   echo '$emailTo'
-   echo 'emailTo'
-  // emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:"${EMAIL_TO}"
+   def emailTo='amar.tyagi@kelltontech.com'
+  // emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:emailTo
 }
