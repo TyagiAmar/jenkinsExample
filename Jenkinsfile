@@ -65,9 +65,13 @@ try {
 
                 }
     }
+    catch (exceptionorg.jenkinsci.plugins.workflow.steps.FlowInterruptedException ee)
+    {
+        echo(" timout here ! build not published. ")
+    }
     catch (Exception e)
     {
-        echo("exception"+e.toString())
+        currentBuild.result='FAILURE'
         sendEmails(DEV_EmailRecipients,'Hi,Publish failed !','',true)
     }
 
