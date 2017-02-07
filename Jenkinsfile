@@ -28,18 +28,7 @@ try {
         currentBuild.result='FAILURE'
         sendEmails('''Hi,build failed, please see logs...''' +e.getMessage())
     }
-       /* stage ('upload')
-        {
-            try
-            {
-            androidApkUpload apkFilesPattern: '**/*.apk', googleCredentialsId: 'AmarExample', recentChangeList: [[language: 'es-US', text: 'New changes.']], trackName: 'alpha'
-            }
-            catch(Exception e)
-            {
-            sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage())
-            }
 
-        }*/
 }
 
 def sendEmails(msg) {
