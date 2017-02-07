@@ -1,4 +1,4 @@
-def EMAIL_TO='amar.tyagi@kelltontech.com'
+def emailTo='amar.tyagi@kelltontech.com'
 
 node() {
 try {
@@ -43,5 +43,7 @@ try {
   //      }*/
 
 def sendEmails(msg) {
-  emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:"${EMAIL_TO}"
+   echo 'value: ${emailTo}'
+   echo "${EMAIL_TO}"
+  // emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:"${EMAIL_TO}"
 }
