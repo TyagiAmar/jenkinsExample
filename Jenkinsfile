@@ -30,19 +30,18 @@ try {
 
 }
 
-  /* stage ('upload')
-        {
-            try
-            {
-            androidApkUpload apkFilesPattern: '**/*.apk', googleCredentialsId: 'AmarExample', recentChangeList: [[language: 'es-US', text: 'New changes.']], trackName: 'alpha'
-            }
-            catch(Exception e)
-            {
-            sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage())
-            }
-
-        }*/
+  // stage ('upload')
+  //      {
+  //          try
+  //          {
+  //          androidApkUpload apkFilesPattern: '**/*.apk', googleCredentialsId: 'AmarExample', recentChangeList: [[language: 'es-US', text: 'New changes.']], trackName: 'alpha'
+  //          }
+  //          catch(Exception e)
+  //          {
+  //          sendEmails('''Hi,build not uploaded on play store , please see logs...''' +e.getMessage())
+  //          }
+  //      }*/
 
 def sendEmails(msg) {
-  emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:'amar.tyagi@kelltontech.com'
+  emailext attachLog: true,body: msg, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:"${index}"
 }
