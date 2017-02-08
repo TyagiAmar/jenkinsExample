@@ -56,8 +56,7 @@ try {
                                         echo " coming in timeout "
                                         //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
                                         //input message: 'Proceed with release?', parameters: [choice(choices: ['Stage', 'Prod'], description: '', name: 'Buildflavour')]
-                                        choice = new ChoiceParameterDefinition('Buildflavour', ['option1', 'option2'] as String[], 'Description')
-                                        input message: 'Select one', parameters: [choice]
+
 
                                         echo "input return value ---------->>>>>>>> "+env.Buildflavour
 

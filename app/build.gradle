@@ -1,3 +1,4 @@
+apply from: 'versioning.gradle'
 apply plugin: 'com.android.application'
 
 android {
@@ -7,9 +8,14 @@ android {
         applicationId "amar.tyagi.com.myjenkinsexample"
         minSdkVersion 23
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        versionCode buildVersionCode()
+        versionName "${VERSION_NAME}"
+        project.version = android.defaultConfig.versionName
+        def APP_VERSION = "APP_VERSION"
+        buildConfigField "String", APP_VERSION, "\"${VERSION_NAME.substring(0,VERSION_NAME.lastIndexOf(".")).toString()}\""
+        multiDexEnabled true
     }
     buildTypes {
         release {
