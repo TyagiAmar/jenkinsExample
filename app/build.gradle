@@ -17,11 +17,48 @@ android {
         buildConfigField "String", APP_VERSION, "\"${VERSION_NAME.substring(0,VERSION_NAME.lastIndexOf(".")).toString()}\""
         multiDexEnabled true
     }
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            storeFile file("${RELEASE_SIGNING_STORE_KEYSTORE}")
+            storePassword "${RELEASE_SIGNING_STORE_PASSWORD}"
+            keyAlias "${RELEASE_SIGNING_KEY_ALAIS}"
+            keyPassword "${RELEASE_SIGNING_KEY_PASSWORD}"
         }
+    }
+
+    buildTypes {
+        def prefixFileName=""
+        release {
+            prefixFileName="realese"
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    output.outputFile = new File(output.outputFile.parent, "myApp"+prefixFileName+".apk"
+                    )
+                }
+            }
+        }
+        debug{
+            prefixFileName="debug"
+            debuggable true
+            minifyEnabled false
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    output.outputFile = new File(output.outputFile.parent, "myApp"+prefixFileName+".apk"
+                    )
+                }
+            }
+        }
+
     }
 }
 
