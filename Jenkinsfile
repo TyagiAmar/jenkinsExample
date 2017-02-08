@@ -21,7 +21,7 @@ try {
             sh './gradlew clean assembleRelease'
             if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
             {
-                 sendEmails(DEV_EmailRecipients,'Hi,build succeded,after failure.','**/*.apk',false)
+                 sendEmails(DEV_EmailRecipients,'Hi,build succeded,after failure.','',false)
             }
 
         }
@@ -47,7 +47,7 @@ try {
                     if(branchName=='master')
                     {
                         //todo
-                        timeout(time: 10, unit: 'SECONDS')
+                        timeout(time: 120, unit: 'SECONDS')
                                 {
                                     echo" coming in timeout "
                                     input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
