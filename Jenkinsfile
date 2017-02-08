@@ -56,10 +56,9 @@ node() {
                                         {
                                             echo " coming in timeout "
                                             //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
-                                            input message: 'Proceed with release?', parameters: [choice(names = ["Stage", "Prod"], description: '', name: 'BuildFlavour')]
+                                            def result=input message: 'Proceed with release?', parameters: [choice(choices=["Stage", "Prod"], description: '', name: 'BuildFlavour')]
 
-
-                                            echo "input return value ---------->>>>>>>> "+env.BuildFlavour
+                                            echo "input return value ---------->>>>>>>> "+result
 
                                             sendEmails(DEV_EmailRecipients+""+QA_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                                         }
