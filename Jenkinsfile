@@ -4,85 +4,84 @@ def DEV_EmailRecipients='amar.tyagi@kelltontech.com vijay.kumar@kelltontech.com'
 def QA_EmailRecipients='pratap.hada@kelltontech.com'
 def MNGR_EmailRecipients='vijay.kumar@kelltontech.com'
 
-def QA_BuildAuthorization='vijay.kumar@kelltontech.com'
-def PROD_BuildAuthorization='amar.tyagi@kelltontech.com'
+def QA_BuildAuthorization='amar.tyagi@kelltontech.com'
+def PROD_BuildAuthorization='vijay.kumar@kelltontech.com'
 
 
-
-
-
+// Constants variable used below for msg
+def BUILD_SUCCESS_AFTER_FAILED='Hi, Build process completed successfully after failure last build!'
+def BUILD_FAILED='Hi, Build process failed! Check attached log file.'
+def BUILD_PUBLISH_QA_STAGE_SUCCESS='Hi, Build successfully published to given recipients.'
+def BUILD_PUBLISH_FAILED='Hi, Build publish failed, please check attached log file.'
 
 node() {
-try {
-
-        stage ('Checkout'){
-          checkout scm
-        }
-
-        stage ('Build')
-        {
-            // todo one time
-            sh 'chmod a+x ./gradlew'
-            sh './gradlew clean assembleRelease'
-            if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
-            {
-                 sendEmails(DEV_EmailRecipients,'Hi,build succeded,after failure.','',false)
+    try {
+            stage ('Checkout'){
+              checkout scm
             }
 
+            stage ('Build')
+            {
+                // todo one time
+                sh 'chmod a+x ./gradlew'
+                sh './gradlew clean assembleRelease'
+                if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
+                {
+                     sendEmails(DEV_EmailRecipients,BUILD_SUCCESS_AFTER_FAILED,'',false)
+                }
+
+            }
+
+            stage ('Report'){
+                    sh './gradlew lint'
+                    androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
+            }
+
+            currentBuild.result='SUCCESS'
+        }
+        catch (Exception e)
+        {
+            currentBuild.result='FAILURE'
+            sendEmails(DEV_EmailRecipients,BUILD_FAILED,'',true)
         }
 
-        stage ('Report'){
-                sh './gradlew lint'
-                androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
-        }
+        if( currentBuild.result=='SUCCESS') {
+            try {
+                stage('Publish')
+                        {
+                            String branchName = env.BRANCH_NAME
+                            if (branchName == 'master') {
+                                //todo
+                                timeout(time: 120, unit: 'SECONDS')
+                                        {
+                                            echo " coming in timeout "
+                                            //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
+                                            def result=input message: 'Proceed with release?', parameters: [choice(choices=["Stage", "Prod"], description: '', name: 'BuildFlavour')]
 
-        currentBuild.result='SUCCESS'
-    }
-    catch (Exception e)
-    {
-        currentBuild.result='FAILURE'
-        sendEmails(DEV_EmailRecipients,'Hi,build Failed!','',true)
-    }
+                                            echo "input return value ---------->>>>>>>> "+result
 
-    if( currentBuild.result=='SUCCESS') {
-        try {
-            stage('Publish')
-                    {
-                        String branchName = env.BRANCH_NAME
-                        if (branchName == 'master') {
-                            //todo
-                            timeout(time: 120, unit: 'SECONDS')
-                                    {
-                                        echo " coming in timeout "
-                                        //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
-                                        //input message: 'Proceed with release?', parameters: [choice(choices: ['Stage', 'Prod'], description: '', name: 'Buildflavour')]
+                                            sendEmails(DEV_EmailRecipients+""+QA_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
+                                        }
+                            } else if (branchName.startsWith('release')) {
 
-
-                                        echo "input return value ---------->>>>>>>> "+env.Buildflavour
-
-                                        sendEmails(QA_BuildAuthorization, 'Hi,Please find attached build for testing!', '**/*.apk', false)
-                                    }
-                        } else if (branchName.startsWith('release')) {
+                            }
 
                         }
+            }
+            catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException ee) {
+                echo(" timeout here ! build not published. ")
+            }
+            catch (Exception e) {
+                echo" publish exception "+e.toString()
+                sendEmails(DEV_EmailRecipients, BUILD_PUBLISH_FAILED, '', true)
+            }
+        }
 
-                    }
-        }
-        catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException ee) {
-            echo(" timeout here ! build not published. ")
-        }
-        catch (Exception e) {
-            sendEmails(DEV_EmailRecipients, 'Hi,Publish failed !', '', true)
-        }
     }
 
-
-}
-
-def sendEmails(emailRecipient,msg,pattern,logAttach) {
-
-    emailext attachLog: logAttach,body: msg,attachmentsPattern:pattern, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:emailRecipient
-}
+    def sendEmails(emailRecipient,msg,pattern,logAttach) {
+        emailext attachLog: logAttach,body: msg,attachmentsPattern:pattern, subject: '$PROJECT_NAME - Build # $BUILD_NUMBER -'+currentBuild.result, to:emailRecipient
+    }
 
   // stage ('upload')
   //      {
