@@ -55,8 +55,9 @@ try {
                                     {
                                         echo " coming in timeout "
                                         //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
-                                        def result = input message: 'Proceed with release?', parameters: [choice(choices: ['Prod', 'Stage'], description: '', name: 'BuildType?')]
-                                        echo "input return value ---------->>>>>>>> "+result
+                                        input message: 'Proceed with release?', parameters: [choice(choices: ['Stage', 'Prod'], description: '', name: 'Buildflavour')]
+                                        echo "input return value ---------->>>>>>>> "+env.Buildflavour
+                                        
                                         sendEmails(QA_BuildAuthorization, 'Hi,Please find attached build for testing!', '**/*.apk', false)
                                     }
                         } else if (branchName.startsWith('release')) {
