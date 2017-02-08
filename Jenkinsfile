@@ -1,4 +1,4 @@
-#!/usr/bin/env groovy
+#!groovy
 
 def DEV_EmailRecipients='amar.tyagi@kelltontech.com'
 def QA_EmailRecipients='pratap.hada@kelltontech.com'
@@ -65,7 +65,7 @@ try {
 
                 }
     }
-    catch (exceptionorg.jenkinsci.plugins.workflow.steps.FlowInterruptedException ee)
+    catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException ee)
     {
         echo(" timout here ! build not published. ")
     }
