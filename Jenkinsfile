@@ -32,10 +32,10 @@ node() {
 
             }
 
-            stage ('Report'){
-                    sh './gradlew lint'
-                    androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
-            }
+           // stage ('Report'){
+          //          sh './gradlew lint'
+          //          androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
+          //  }
 
             currentBuild.result='SUCCESS'
         }
