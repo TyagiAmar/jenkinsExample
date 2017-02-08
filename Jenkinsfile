@@ -24,7 +24,7 @@ node() {
             {
                 // todo one time
                 sh 'chmod a+x ./gradlew'
-                sh './gradlew clean assembleRelease'
+                sh './gradlew clean assemble'
                 if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
                 {
                      sendEmails(DEV_EmailRecipients,BUILD_SUCCESS_AFTER_FAILED,'',false)
@@ -50,7 +50,7 @@ node() {
                 stage('Publish')
                         {
                             String branchName = env.BRANCH_NAME
-                            if (branchName == 'master') {
+                            if (branchName == 'develop') {
                                 //todo
                                 timeout(time: 120, unit: 'SECONDS')
                                         {
@@ -63,6 +63,7 @@ node() {
                                             sendEmails(DEV_EmailRecipients+""+QA_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                                         }
                             } else if (branchName.startsWith('release')) {
+                                // todo do release code here
 
                             }
 
