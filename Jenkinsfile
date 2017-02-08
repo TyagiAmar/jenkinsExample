@@ -4,7 +4,7 @@ def DEV_EmailRecipients='amar.tyagi@kelltontech.com'
 def QA_EmailRecipients='pratap.hada@kelltontech.com'
 def MNGR_EmailRecipients='vijay.kumar@kelltontech.com'
 
-def QA_BuildAuthorization='vijay.kumar@kelltontech.com'
+def QA_BuildAuthorization='vijay.kumar@kelltontech.com,amar.tyagi@kelltontech.com'
 def PROD_BuildAuthorization='amar.tyagi@kelltontech.com'
 
 node() {
@@ -30,8 +30,6 @@ try {
                 sh './gradlew lint'
                 androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
         }
-
-
 
         currentBuild.result='SUCCESS'
     }
@@ -71,7 +69,6 @@ try {
     }
     catch (Exception e)
     {
-        currentBuild.result='FAILURE'
         sendEmails(DEV_EmailRecipients,'Hi,Publish failed !','',true)
     }
 
