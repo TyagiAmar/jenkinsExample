@@ -4,7 +4,7 @@ def DEV_EmailRecipients='amar.tyagi@kelltontech.com'
 def QA_EmailRecipients='pratap.hada@kelltontech.com'
 def MNGR_EmailRecipients='vijay.kumar@kelltontech.com'
 
-def QA_BuildAuthorization='amar.tyagi@kelltontech.com' //vijay.kumar@kelltontech.com,
+def QA_BuildAuthorization='vijay.kumar@kelltontech.com'
 def PROD_BuildAuthorization='amar.tyagi@kelltontech.com'
 
 node() {
@@ -21,7 +21,7 @@ try {
             sh './gradlew clean assembleRelease'
             if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
             {
-                 sendEmails(DEV_EmailRecipients,'Hi,build succeded,after failure.','',false)
+                 sendEmails(DEV_EmailRecipients,'Hi,build succeded,after failure.','**/*.apk',false)
             }
 
         }
@@ -50,11 +50,9 @@ try {
                         timeout(time: 10, unit: 'SECONDS')
                                 {
                                     echo" coming in timeout "
-                                    input message: 'ready for manual testing(QA)?', submitter: QA_BuildAuthorization
+                                    input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
                                     sendEmails(QA_BuildAuthorization,'Hi,Please find attached build for testing!','**/*.apk',false)
                                 }
-
-
                     }
                     else if(branchName.startsWith('release'))
                     {
@@ -65,7 +63,7 @@ try {
     }
     catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException ee)
     {
-        echo(" timout here ! build not published. ")
+        echo(" timeout here ! build not published. ")
     }
     catch (Exception e)
     {
