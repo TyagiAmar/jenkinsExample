@@ -49,8 +49,8 @@ try {
                         //todo
                         timeout(time: 10, unit: 'SECONDS')
                                 {
-                                    echo" coming in timeout ${QA_BuildAuthorization} "
-                                    input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
+                                    echo" coming in timeout "
+                                    input message: 'ready for manual testing(QA)?', submitter: QA_BuildAuthorization
                                     sendEmails(QA_BuildAuthorization,'Hi,Please find attached build for testing!','**/*.apk',false)
                                 }
 
