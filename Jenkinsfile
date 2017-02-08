@@ -1,10 +1,10 @@
 #!groovy
 
-def DEV_EmailRecipients='amar.tyagi@kelltontech.com'
+def DEV_EmailRecipients='amar.tyagi@kelltontech.com vijay.kumar@kelltontech.com'
 def QA_EmailRecipients='pratap.hada@kelltontech.com'
 def MNGR_EmailRecipients='vijay.kumar@kelltontech.com'
 
-def QA_BuildAuthorization='vijay.kumar@kelltontech.com,amar.tyagi@kelltontech.com'
+def QA_BuildAuthorization='vijay.kumar@kelltontech.com'
 def PROD_BuildAuthorization='amar.tyagi@kelltontech.com'
 
 node() {
