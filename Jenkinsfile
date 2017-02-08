@@ -7,6 +7,11 @@ def MNGR_EmailRecipients='vijay.kumar@kelltontech.com'
 def QA_BuildAuthorization='vijay.kumar@kelltontech.com'
 def PROD_BuildAuthorization='amar.tyagi@kelltontech.com'
 
+
+
+
+
+
 node() {
 try {
 
@@ -39,35 +44,33 @@ try {
         sendEmails(DEV_EmailRecipients,'Hi,build Failed!','',true)
     }
 
-
-    try {
-        stage('Publish')
-                {
-                    String  branchName=env.BRANCH_NAME
-                    if(branchName=='master')
+    if( currentBuild.result=='SUCCESS') {
+        try {
+            stage('Publish')
                     {
-                        //todo
-                        timeout(time: 120, unit: 'SECONDS')
-                                {
-                                    echo" coming in timeout "
-                                    input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
-                                    sendEmails(QA_BuildAuthorization,'Hi,Please find attached build for testing!','**/*.apk',false)
-                                }
-                    }
-                    else if(branchName.startsWith('release'))
-                    {
+                        String branchName = env.BRANCH_NAME
+                        if (branchName == 'master') {
+                            //todo
+                            timeout(time: 120, unit: 'SECONDS')
+                                    {
+                                        echo " coming in timeout "
+                                        //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
+                                        def result = input message: 'Proceed with release?', parameters: [choice(choices: ['Prod', 'Stage'], description: '', name: 'BuildType?')]
+                                        echo "input return value ---------->>>>>>>> "+result
+                                        sendEmails(QA_BuildAuthorization, 'Hi,Please find attached build for testing!', '**/*.apk', false)
+                                    }
+                        } else if (branchName.startsWith('release')) {
+
+                        }
 
                     }
-
-                }
-    }
-    catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException ee)
-    {
-        echo(" timeout here ! build not published. ")
-    }
-    catch (Exception e)
-    {
-        sendEmails(DEV_EmailRecipients,'Hi,Publish failed !','',true)
+        }
+        catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException ee) {
+            echo(" timeout here ! build not published. ")
+        }
+        catch (Exception e) {
+            sendEmails(DEV_EmailRecipients, 'Hi,Publish failed !', '', true)
+        }
     }
 
 
