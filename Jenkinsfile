@@ -29,7 +29,7 @@ node() {
                 if(branchName.startsWith('release'))
                     sh './gradlew clean assemblerelease'
                 else
-                    sh './gradlew clean assembledebug'
+                    sh './gradlew clean assemblerelease'
                 if(currentBuild.previousBuild!=null && currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
                 {
                      sendEmails(DEV_EmailRecipients,BUILD_SUCCESS_AFTER_FAILED,'',false)
