@@ -26,7 +26,7 @@ node() {
             {
                 // todo one time
                 sh 'chmod a+x ./gradlew'
-                if(branchName.startsWith('release') || branchName.startsWith('feature'))
+                if(branchName.startsWith('release'))
                     sh './gradlew clean assemblerelease'
                 else
                     sh './gradlew clean assembledebug'
@@ -36,17 +36,17 @@ node() {
                 }
             }
 
-           // stage ('Report'){
-          //          sh './gradlew lint'
-          //          androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
-          //  }
+            stage ('Report'){
+                    sh './gradlew lint'
+                    androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
+            }
 
             currentBuild.result='SUCCESS'
         }
         catch (Exception e)
         {
             currentBuild.result='FAILURE'
-            echo" failure exceoption "+e.toString()
+            echo" failure exception "+e.toString()
             sendEmails(DEV_EmailRecipients,BUILD_FAILED,'',true)
         }
 
@@ -54,24 +54,23 @@ node() {
             try {
                 stage('Publish')
                         {
-                            if (branchName == 'develop') {
+                            if (branchName == 'develop' || branchName.startsWith('feature')) {
                                 //todo
                                 timeout(time: 120, unit: 'SECONDS')
                                         {
-                                            def outcome = input id: 'Please take a action',
-                                                    message: 'Workflow Configuration',
+                                            def outcome = input id: 'Want to email build?',
+                                                    message: 'Build will be send to Developer!',
                                                     ok: 'Okay',
                                                     parameters: [
                                                             [
-                                                                    $class: 'BooleanParameterDefinition',
-                                                                    defaultValue: false,
-                                                                    name: 'Send build to QA?',
-                                                                    description: 'provide answer'
+                                                                    $class: 'ChoiceParameterDefinition', choices: 'select\nYes\nNo',
+                                                                    name: 'Take your pick',
+                                                                    description: ''
                                                             ]
                                                     ]
 
                                             echo" ans "+outcome
-                                            if(outcome)
+                                            if("Yes".equals(outcome))
                                                 sendEmails(DEV_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                                         }
                             } else if (branchName.startsWith('release')) {
