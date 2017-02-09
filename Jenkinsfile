@@ -98,7 +98,7 @@ node() {
 
                                            // echo "input return value ---------->>>>>>>> "+result
 
-                                            sendEmails(DEV_EmailRecipients+""+QA_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
+                                            sendEmails(DEV_EmailRecipients+" "+QA_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                                         }
                             } else if (branchName.startsWith('release')) {
                                 // todo do release code here
