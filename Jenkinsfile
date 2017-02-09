@@ -23,7 +23,7 @@ node() {
             stage ('Build')
             {
                 // todo one time
-                tmp sh 'chmod a+x ./gradlew'
+                sh 'chmod a+x ./gradlew'
                 if(branchName.startsWith('release'))
                     sh './gradlew clean assemblerelease'
                 else
@@ -44,6 +44,7 @@ node() {
         catch (Exception e)
         {
             currentBuild.result='FAILURE'
+            echo" failure exceoption "+e.toString()
             sendEmails(DEV_EmailRecipients,BUILD_FAILED,'',true)
         }
 
