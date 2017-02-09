@@ -16,6 +16,7 @@ def BUILD_PUBLISH_FAILED='Hi, Build publish failed, please check attached log fi
 
 node() {
     try {
+        String branchName = env.BRANCH_NAME
             stage ('Checkout'){
               checkout scm
             }
@@ -52,7 +53,6 @@ node() {
             try {
                 stage('Publish')
                         {
-                            String branchName = env.BRANCH_NAME
                             if (branchName == 'develop') {
                                 //todo
                                 timeout(time: 120, unit: 'SECONDS')
