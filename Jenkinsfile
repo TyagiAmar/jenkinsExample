@@ -58,10 +58,6 @@ node() {
                                 //todo
                                 timeout(time: 120, unit: 'SECONDS')
                                         {
-                                            echo " coming in timeout "
-                                            //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
-                                            //def result=input message: 'Proceed with release?', parameters: [choice(choices=["Stage", "Prod"], description: '', name: 'BuildFlavour')]
-                                            //
                                             def outcome = input id: 'Please take a action',
                                                     message: 'Workflow Configuration',
                                                     ok: 'Okay',
@@ -75,12 +71,8 @@ node() {
                                                     ]
 
                                             echo" ans "+outcome
-
-                                            //
-
-                                           // echo "input return value ---------->>>>>>>> "+result
-
-                                            sendEmails(DEV_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
+                                            if(outcome)
+                                                sendEmails(DEV_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                                         }
                             } else if (branchName.startsWith('release')) {
                                 // todo do release code here
