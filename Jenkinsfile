@@ -70,12 +70,11 @@ node() {
                                                                     $class: 'BooleanParameterDefinition',
                                                                     defaultValue: false,
                                                                     name: 'Send build to QA?',
-                                                                    description: 'A checkbox option'
+                                                                    description: 'provide answer'
                                                             ]
                                                     ]
 
                                             echo" ans "+outcome
-                                            echo "P1: ${outcome.get('Send build to QA?')}"
 
                                             //
 
