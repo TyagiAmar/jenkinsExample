@@ -23,13 +23,15 @@ node() {
             stage ('Build')
             {
                 // todo one time
-                sh 'chmod a+x ./gradlew'
-                sh './gradlew clean assemble'
+                tmp sh 'chmod a+x ./gradlew'
+                if(branchName.startsWith('release'))
+                    sh './gradlew clean assemblerelease'
+                else
+                    sh './gradlew clean assembledebug'
                 if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
                 {
                      sendEmails(DEV_EmailRecipients,BUILD_SUCCESS_AFTER_FAILED,'',false)
                 }
-
             }
 
            // stage ('Report'){
@@ -56,9 +58,44 @@ node() {
                                         {
                                             echo " coming in timeout "
                                             //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
-                                            def result=input message: 'Proceed with release?', parameters: [choice(choices=["Stage", "Prod"], description: '', name: 'BuildFlavour')]
+                                            //def result=input message: 'Proceed with release?', parameters: [choice(choices=["Stage", "Prod"], description: '', name: 'BuildFlavour')]
+                                            //
+                                            def outcome = input id: 'Run-test-suites',
+                                                    message: 'Workflow Configuration',
+                                                    ok: 'Okay',
+                                                    parameters: [
+                                                            [
+                                                                    $class: 'BooleanParameterDefinition',
+                                                                    defaultValue: true,
+                                                                    name: 'Run test suites?',
+                                                                    description: 'A checkbox option'
+                                                            ],
+                                                            [
+                                                                    $class: 'StringParameterDefinition',
+                                                                    defaultValue: "Hello",
+                                                                    name: 'Enter some text',
+                                                                    description: 'A text option'
+                                                            ],
+                                                            [
+                                                                    $class: 'PasswordParameterDefinition',
+                                                                    defaultValue: "MyPasswd",
+                                                                    name: 'Enter a password',
+                                                                    description: 'A password option'
+                                                            ],
+                                                            [
+                                                                    $class: 'ChoiceParameterDefinition', choices: 'Choice 1\nChoice 2\nChoice 3',
+                                                                    name: 'Take your pick',
+                                                                    description: 'A select box option'
+                                                            ]
+                                                    ]
 
-                                            echo "input return value ---------->>>>>>>> "+result
+                                            echo "P1: ${outcome.get('Run test suites?')}"
+                                            echo "P2: ${outcome.get('Enter some text')}"
+                                            echo "P3: ${outcome.get('Enter a password')}"
+                                            echo "P4: ${outcome.get('Take your pick')}"
+                                            //
+
+                                           // echo "input return value ---------->>>>>>>> "+result
 
                                             sendEmails(DEV_EmailRecipients+""+QA_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                                         }
