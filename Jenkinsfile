@@ -1,6 +1,6 @@
 #!groovy
 
-def DEV_EmailRecipients='amar.tyagi@kelltontech.com vijay.kumar@kelltontech.com'
+def DEV_EmailRecipients='amar.tyagi@kelltontech.com'
 def QA_EmailRecipients='pratap.hada@kelltontech.com'
 def MNGR_EmailRecipients='vijay.kumar@kelltontech.com'
 
@@ -15,6 +15,8 @@ def BUILD_PUBLISH_QA_STAGE_SUCCESS='Hi, Build successfully published to given re
 def BUILD_PUBLISH_FAILED='Hi, Build publish failed, please check attached log file.'
 
 node() {
+    String branchName = env.BRANCH_NAME
+    echo" branch name "+branchName
     try {
             stage ('Checkout'){
               checkout scm
@@ -24,12 +26,14 @@ node() {
             {
                 // todo one time
                 sh 'chmod a+x ./gradlew'
-                sh './gradlew clean assembleRelease'
+                if(branchName.startsWith('release'))
+                    sh './gradlew clean assemblerelease'
+                else
+                    sh './gradlew clean assembledebug'
                 if(currentBuild.previousBuild.result!=null && !currentBuild.previousBuild.result.toString().equals('SUCCESS'))
                 {
                      sendEmails(DEV_EmailRecipients,BUILD_SUCCESS_AFTER_FAILED,'',false)
                 }
-
             }
 
             stage ('Report'){
@@ -42,6 +46,7 @@ node() {
         catch (Exception e)
         {
             currentBuild.result='FAILURE'
+            echo" failure exception "+e.toString()
             sendEmails(DEV_EmailRecipients,BUILD_FAILED,'',true)
         }
 
@@ -49,21 +54,28 @@ node() {
             try {
                 stage('Publish')
                         {
-                            String branchName = env.BRANCH_NAME
-                            if (branchName == 'master') {
+                            if (branchName == 'develop' || branchName.startsWith('feature')) {
                                 //todo
                                 timeout(time: 120, unit: 'SECONDS')
                                         {
-                                            echo " coming in timeout "
-                                            //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
-                                            def result=input message: 'Proceed with release?', parameters: [choice(choices=["Stage", "Prod"], description: '', name: 'BuildFlavour')]
+                                            def outcome = input id: 'Want to email build?',
+                                                    message: 'Send Build?',
+                                                    ok: 'Okay',
+                                                    parameters: [
+                                                            [
+                                                                    $class: 'ChoiceParameterDefinition', choices: 'select\nYes\nNo',
+                                                                    name: 'Take your pick',
+                                                                    description: ''
+                                                            ]
+                                                    ]
 
-                                            echo "input return value ---------->>>>>>>> "+result
-
-                                            sendEmails(DEV_EmailRecipients+""+QA_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
+                                            echo" ans "+outcome
+                                            if("Yes".equals(outcome))
+                                                sendEmails(DEV_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                                         }
                             } else if (branchName.startsWith('release')) {
-
+                                // todo do release code here
+                                sendEmails(DEV_EmailRecipients+" "+QA_EmailRecipients+" "+MNGR_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                             }
 
                         }
