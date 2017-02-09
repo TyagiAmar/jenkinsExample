@@ -27,9 +27,7 @@ android {
     }
 
     buildTypes {
-        def prefixFileName=""
         release {
-            prefixFileName="Realese"
             debuggable false
             minifyEnabled true
             shrinkResources true
@@ -38,22 +36,21 @@ android {
             signingConfig signingConfigs.release
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
-                    output.outputFile = new File(output.outputFile.parent, "myApp"+prefixFileName+".apk"
+                    output.outputFile = new File(output.outputFile.parent, "myAppRelease.apk"
                     )
                 }
             }
         }
         debug{
-            prefixFileName="Debug"
             debuggable true
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
-                    output.outputFile = new File(output.outputFile.parent, "myApp"+prefixFileName+".apk"
+                    output.outputFile = new File(output.outputFile.parent, "myAppDebug.apk"
                     )
                 }
             }
