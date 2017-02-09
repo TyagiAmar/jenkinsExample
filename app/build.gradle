@@ -29,7 +29,7 @@ android {
     buildTypes {
         def prefixFileName=""
         release {
-            prefixFileName="realese"
+            prefixFileName="Realese"
             debuggable false
             minifyEnabled true
             shrinkResources true
@@ -44,7 +44,7 @@ android {
             }
         }
         debug{
-            prefixFileName="debug"
+            prefixFileName="Debug"
             debuggable true
             minifyEnabled false
             shrinkResources false

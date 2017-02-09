@@ -16,6 +16,7 @@ def BUILD_PUBLISH_FAILED='Hi, Build publish failed, please check attached log fi
 
 node() {
     String branchName = env.BRANCH_NAME
+    echo" branch name "+branchName
     try {
             stage ('Checkout'){
               checkout scm
@@ -25,7 +26,7 @@ node() {
             {
                 // todo one time
                 sh 'chmod a+x ./gradlew'
-                if(branchName.startsWith('release'))
+                if(branchName.startsWith('release') || branchName.startsWith('feature'))
                     sh './gradlew clean assemblerelease'
                 else
                     sh './gradlew clean assembledebug'
@@ -61,48 +62,30 @@ node() {
                                             //input message: 'ready for manual testing(QA)?', submitter: "${QA_BuildAuthorization}"
                                             //def result=input message: 'Proceed with release?', parameters: [choice(choices=["Stage", "Prod"], description: '', name: 'BuildFlavour')]
                                             //
-                                            def outcome = input id: 'Run-test-suites',
+                                            def outcome = input id: 'Please take a action',
                                                     message: 'Workflow Configuration',
                                                     ok: 'Okay',
                                                     parameters: [
                                                             [
                                                                     $class: 'BooleanParameterDefinition',
-                                                                    defaultValue: true,
-                                                                    name: 'Run test suites?',
+                                                                    defaultValue: false,
+                                                                    name: 'Send build to QA?',
                                                                     description: 'A checkbox option'
-                                                            ],
-                                                            [
-                                                                    $class: 'StringParameterDefinition',
-                                                                    defaultValue: "Hello",
-                                                                    name: 'Enter some text',
-                                                                    description: 'A text option'
-                                                            ],
-                                                            [
-                                                                    $class: 'PasswordParameterDefinition',
-                                                                    defaultValue: "MyPasswd",
-                                                                    name: 'Enter a password',
-                                                                    description: 'A password option'
-                                                            ],
-                                                            [
-                                                                    $class: 'ChoiceParameterDefinition', choices: 'Choice 1\nChoice 2\nChoice 3',
-                                                                    name: 'Take your pick',
-                                                                    description: 'A select box option'
                                                             ]
                                                     ]
 
-                                            echo "P1: ${outcome.get('Run test suites?')}"
-                                            echo "P2: ${outcome.get('Enter some text')}"
-                                            echo "P3: ${outcome.get('Enter a password')}"
-                                            echo "P4: ${outcome.get('Take your pick')}"
+                                            echo" ans "+outcome
+                                            echo "P1: ${outcome.get('Send build to QA?')}"
+
                                             //
 
                                            // echo "input return value ---------->>>>>>>> "+result
 
-                                            sendEmails(DEV_EmailRecipients+" "+QA_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
+                                            sendEmails(DEV_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                                         }
                             } else if (branchName.startsWith('release')) {
                                 // todo do release code here
-
+                                sendEmails(DEV_EmailRecipients+" "+QA_EmailRecipients+" "+MNGR_EmailRecipients,BUILD_PUBLISH_QA_STAGE_SUCCESS, '**/*.apk', false)
                             }
 
                         }
