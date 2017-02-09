@@ -1,6 +1,6 @@
 #!groovy
 
-def DEV_EmailRecipients='amar.tyagi@kelltontech.com vijay.kumar@kelltontech.com'
+def DEV_EmailRecipients='amar.tyagi@kelltontech.com'
 def QA_EmailRecipients='pratap.hada@kelltontech.com'
 def MNGR_EmailRecipients='vijay.kumar@kelltontech.com'
 
@@ -15,8 +15,8 @@ def BUILD_PUBLISH_QA_STAGE_SUCCESS='Hi, Build successfully published to given re
 def BUILD_PUBLISH_FAILED='Hi, Build publish failed, please check attached log file.'
 
 node() {
+    String branchName = env.BRANCH_NAME
     try {
-        String branchName = env.BRANCH_NAME
             stage ('Checkout'){
               checkout scm
             }
