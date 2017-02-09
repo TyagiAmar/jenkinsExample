@@ -59,7 +59,7 @@ node() {
                                 timeout(time: 120, unit: 'SECONDS')
                                         {
                                             def outcome = input id: 'Want to email build?',
-                                                    message: 'Build will be send to Developer!',
+                                                    message: 'Send Build?',
                                                     ok: 'Okay',
                                                     parameters: [
                                                             [
