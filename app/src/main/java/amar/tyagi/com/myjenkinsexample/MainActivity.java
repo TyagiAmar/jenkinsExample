@@ -10,7 +10,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myException();
+        Log.e("amar","build "+BuildConfig.BUILD_TYPE);
+        //myException();
     }
 
     void myException()
